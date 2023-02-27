@@ -307,8 +307,8 @@ score = {
                 gameState.current = gameState.gameOver
 
             } else {
-                if (this.current < 21) { imgX: 1038 }
-                ctx.drawImage(words, this.imgX, maps[this.current].imgY, this.width, this.height, (this.x - this.w / 2), this.y, this.w, this.h)
+                if (this.current < 21){imgX: 1038}
+                ctx.drawImage(words, this.imgX, 1+(this.imgY+40)*this.current, this.width, this.height, (this.x - this.w / 2), this.y, this.w, this.h)
             }
         }
 
