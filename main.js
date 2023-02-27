@@ -242,65 +242,38 @@ ground = {
 
 //map of number images
 map = [
-    num0 = {
-        imgX: 496,
-        imgY: 60,
-        width: 12,
-        height: 18
+    RASSEMBLER = {
+        imgY: 1,
     },
-    num1 = {
-        imgX: 135,
-        imgY: 455,
-        width: 10,
-        height: 18
+    écoute = {
+        imgY: 70,
     },
-    num2 = {
-        imgX: 292,
+    accompagner = {
         imgY: 160,
-        width: 12,
-        height: 18
     },
-    num3 = {
-        imgX: 306,
-        imgY: 160,
-        width: 12,
-        height: 18
+    integration = {
+        imgY: 222,
     },
-    num4 = {
-        imgX: 320,
-        imgY: 160,
-        width: 12,
-        height: 18
+    esprit_critique = {
+        imgY: 295,
     },
-    num5 = {
-        imgX: 334,
-        imgY: 160,
-        width: 12,
-        height: 18
+    médiateur = {
+        imgY: 368,
     },
-    num6 = {
-        imgX: 292,
-        imgY: 184,
-        width: 12,
-        height: 18
+    adaptabilité = {
+        imgY: 444,
     },
-    num7 = {
-        imgX: 306,
-        imgY: 184,
-        width: 12,
-        height: 18
+    transparence = {
+        imgY: 525,
     },
-    num8 = {
-        imgX: 320,
-        imgY: 184,
-        width: 12,
-        height: 18
+    réunir = {
+        imgY: 592,
     },
-    num9 = {
-        imgX: 334,
-        imgY: 184,
-        width: 12,
-        height: 18
+    opportunités = {
+        imgY: 670,
+    },
+    permanences = {
+        imgY: 761,
     }
 ]
 //current score, top score, tracker
@@ -314,7 +287,7 @@ score = {
     h: 25,
 
     imgX: 215,
-    imgY: 0,
+    // imgY: 0,
     width: 636,
     height: 46,
 
@@ -334,8 +307,8 @@ score = {
                 gameState.current = gameState.gameOver
 
             } else {
-                if (this.current < 21){imgX: 1038}
-                ctx.drawImage(words, this.imgX, 1+(this.imgY+40)*this.current, this.width, this.height, (this.x - this.w / 2), this.y, this.w, this.h)
+                if (this.current < 21) { imgX: 1038 }
+                ctx.drawImage(words, this.imgX, maps[this.current].imgY, this.width, this.height, (this.x - this.w / 2), this.y, this.w, this.h)
             }
         }
 
