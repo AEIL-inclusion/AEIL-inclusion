@@ -34,7 +34,7 @@ theme1.src = 'img/og-theme.png'
 theme2 = new Image()
 theme2.src = 'img/og-theme-2.png'
 bgImage = new Image()
-bgImage.src = 'img/og-theme-2.png'
+bgImage.src = 'img/bg.jpeg'
 frame = 0;
 logo = new Image()
 logo.src = 'img/LOGO.png'
@@ -62,31 +62,32 @@ bg = {
     //object's key-value properties pinpointing its location
     imgX: 0,
     imgY: 0,
-    width: 275,
-    height: 228,
+    width: 607,
+    height: 414,
     //x,y coordinates of where image should be drawn on canvas
     x: 0,
     //https://stackoverflow.com/questions/7043509/this-inside-object
     //reason why 'y' cannot be defined as this.height or bg.height
-    y: cvs.height - 228,
-    w: 276,
-    h: 228,
-    dx: .2,
+    y: 0,
+    w: 607,
+    h: 414,
+    dx: .4,
     //object's render function that utilizes all above values to draw image onto canvas
     render: function () {
-        ctx.drawImage(theme1, this.imgX, this.imgY, this.width, this.height, this.x, this.y, this.w, this.h)
+        ctx.drawImage(bgImage, this.imgX, this.imgY, this.width, this.height, this.x, this.y, this.w, this.h)
 
         //image repeat and tile to fit canvas
-        ctx.drawImage(theme1, this.imgX, this.imgY, this.width, this.height, this.x + this.width, this.y, this.w, this.h)
+        ctx.drawImage(bgImage, this.imgX, this.imgY, this.width, this.height, this.x + this.width, this.y, this.w, this.h)
 
         //image repeat again for continuous animation
-        ctx.drawImage(theme1, this.imgX, this.imgY, this.width, this.height, this.x + this.width * 2, this.y, this.w, this.h)
+        ctx.drawImage(bgImage, this.imgX, this.imgY, this.width, this.height, this.x + this.width * 2, this.y, this.w, this.h)
     },
 
     position: function () {
         //still img on get ready frame
         if (gameState.current == gameState.getReady) {
-            this.x = 0
+            //this.x = 0
+            this.x = (this.x - this.dx) % (this.w)
         }
         //ANIMATION: slowly move background on play game state by decrementing x
         if (gameState.current == gameState.play) {
