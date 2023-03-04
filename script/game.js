@@ -7,6 +7,7 @@ let description //  game description
 let theme1      //  original theme
 let theme2      //  original them v2
 let logo        //  logo witch replace bird
+let bgImage
 let words        //  words
 let bg          //  background
 let bird        //  bird: yellow
@@ -32,6 +33,8 @@ theme1 = new Image()
 theme1.src = 'img/og-theme.png'
 theme2 = new Image()
 theme2.src = 'img/og-theme-2.png'
+bgImage = new Image()
+bgImage.src = 'img/og-theme-2.png'
 frame = 0;
 logo = new Image()
 logo.src = 'img/LOGO.png'
@@ -281,8 +284,8 @@ score = {
     current: 0,
     best: null, // DO THIS STRETCH GOAL
     //values for drawing mapped numbers on canvas
-    x: cvs.width / 2,
-    y: 40,
+    x: 50,
+    y: 160,
     w: 315,
     h: 25,
 
