@@ -34,7 +34,7 @@ theme1.src = 'img/og-theme.png'
 theme2 = new Image()
 theme2.src = 'img/og-theme-2.png'
 bgImage = new Image()
-bgImage.src = 'img/bg.jpeg'
+bgImage.src = 'img/bg.png'
 frame = 0;
 logo = new Image()
 logo.src = 'img/LOGO.png'
@@ -62,16 +62,16 @@ bg = {
     //object's key-value properties pinpointing its location
     imgX: 0,
     imgY: 0,
-    width: 607,
-    height: 414,
+    width: 707,
+    height: 207,
     //x,y coordinates of where image should be drawn on canvas
     x: 0,
     //https://stackoverflow.com/questions/7043509/this-inside-object
     //reason why 'y' cannot be defined as this.height or bg.height
     y: 0,
-    w: 607,
+    w: 707,
     h: 414,
-    dx: .4,
+    dx: .8,
     //object's render function that utilizes all above values to draw image onto canvas
     render: function () {
         ctx.drawImage(bgImage, this.imgX, this.imgY, this.width, this.height, this.x, this.y, this.w, this.h)
@@ -86,8 +86,7 @@ bg = {
     position: function () {
         //still img on get ready frame
         if (gameState.current == gameState.getReady) {
-            //this.x = 0
-            this.x = (this.x - this.dx) % (this.w)
+            this.x = 0
         }
         //ANIMATION: slowly move background on play game state by decrementing x
         if (gameState.current == gameState.play) {
@@ -244,8 +243,12 @@ ground = {
     }
 }
 
-//map of number images
-map = [
+
+//current score, top score, tracker
+score = {
+    //map of number images
+    
+map : [
     RASSEMBLER = {
         imgY: 1,
     },
@@ -278,22 +281,128 @@ map = [
     },
     permanences = {
         imgY: 761,
+    },
+
+
+
+    PROFESSIONNALISER = {
+        imgY: 973,
+    },
+    continuité = {
+        imgY: 1045,
+    },
+    formations = {
+        imgY: 1124,
+    },
+    visibilité = {
+        imgY: 1194,
+    },
+    LinkedIn = {
+        imgY: 1273,
+    },
+    sponsors = {
+        imgY: 1360,
+    },
+    autonomie = {
+        imgY: 1424,
+    },
+    financement = {
+        imgY: 1499,
+    },
+    motiver = {
+        imgY: 2508,
+    },
+    Tips = {
+        imgY: 1650,
+    },
+    entrainement = {
+        imgY: 2508,
+    },
+
+
+
+    RESPONSABILISER = {
+        imgY: 1,
+    },
+    engagement = {
+        imgY: 70,
+    },
+    Sensibiliser = {
+        imgY: 160,
+    },
+    RSE = {
+        imgY: 222,
+    },
+    Responsables = {
+        imgY: 295,
+    },
+    écologiques = {
+        imgY: 368,
+    },
+    humanitaires = {
+        imgY: 444,
+    },
+    templates = {
+        imgY: 525,
+    },
+    sécuriser = {
+        imgY: 592,
+    },
+    neutralit_carbone = {
+        imgY: 670,
+    },
+    ouverture = {
+        imgY: 761,
+    },
+
+
+
+    ECOSYSTEME = {
+        imgY: 973,
+    },
+    Entraide = {
+        imgY: 1045,
+    },
+    WEF = {
+        imgY: 1124,
+    },
+    communication = {
+        imgY: 1194,
+    },
+    équipe = {
+        imgY: 1273,
+    },
+    collaborations = {
+        imgY: 1360,
+    },
+    objectifs = {
+        imgY: 1424,
+    },
+    vision = {
+        imgY: 1499,
+    },
+    partage = {
+        imgY: 2508,
+    },
+    KPI = {
+        imgY: 1650,
+    },
+    evolution = {
+        imgY: 2508,
     }
-]
-//current score, top score, tracker
-score = {
+],
     current: 0,
     best: null, // DO THIS STRETCH GOAL
     //values for drawing mapped numbers on canvas
-    x: 50,
-    y: 160,
+    x: cvs.width/2,
+    y: 20,
     w: 315,
     h: 25,
 
     imgX: 215,
     // imgY: 0,
     width: 636,
-    height: 46,
+    height: 60,
 
     reset: function () {
         this.current = 0
@@ -311,8 +420,8 @@ score = {
                 gameState.current = gameState.gameOver
 
             } else {
-                if (this.current < 21){imgX: 1038}
-                ctx.drawImage(words, this.imgX, 1+(this.imgY+40)*this.current, this.width, this.height, (this.x - this.w / 2), this.y, this.w, this.h)
+                if (this.current < 45) { imgX: 215 }
+                ctx.drawImage(words, this.imgX, this.map[this.current].imgY, this.width, this.height, (this.x - this.w / 2), this.y, this.w, this.h)
             }
         }
 

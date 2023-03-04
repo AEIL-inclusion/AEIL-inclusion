@@ -7,7 +7,7 @@ map = [
         imgY: 70,
     },
     accompagner = {
-        imgY: 160,
+        imgY: 165,
     },
     integration = {
         imgY: 222,
@@ -37,108 +37,108 @@ map = [
 
 
     PROFESSIONNALISER = {
-        imgY: 60,
+        imgY: 973,
     },
     continuité = {
-        imgY: 60,
+        imgY: 1045,
     },
     formations = {
-        imgY: 60,
+        imgY: 1124,
     },
     visibilité = {
-        imgY: 60,
+        imgY: 1194,
     },
     LinkedIn = {
-        imgY: 60,
+        imgY: 1273,
     },
     sponsors = {
-        imgY: 60,
+        imgY: 1360,
     },
     autonomie = {
-        imgY: 60,
+        imgY: 1424,
     },
     financement = {
-        imgY: 60,
+        imgY: 1499,
     },
     motiver = {
-        imgY: 60,
+        imgY: 2508,
     },
     Tips = {
-        imgY: 60,
+        imgY: 1650,
     },
     entrainement = {
-        imgY: 60,
+        imgY: 2508,
     },
 
 
 
     RESPONSABILISER = {
-        imgY: 60,
+        imgY: 1,
     },
     engagement = {
-        imgY: 60,
+        imgY: 70,
     },
     Sensibiliser = {
-        imgY: 60,
+        imgY: 160,
     },
     RSE = {
-        imgY: 60,
+        imgY: 222,
     },
     Responsables = {
-        imgY: 60,
+        imgY: 295,
     },
     écologiques = {
-        imgY: 60,
+        imgY: 368,
     },
     humanitaires = {
-        imgY: 60,
+        imgY: 444,
     },
     templates = {
-        imgY: 60,
+        imgY: 525,
     },
     sécuriser = {
-        imgY: 60,
+        imgY: 592,
     },
     neutralit_carbone = {
-        imgY: 60,
+        imgY: 670,
     },
     ouverture = {
-        imgY: 60,
+        imgY: 761,
     },
 
 
 
     ECOSYSTEME = {
-        imgY: 60,
+        imgY: 973,
     },
     Entraide = {
-        imgY: 60,
+        imgY: 1045,
     },
     WEF = {
-        imgY: 60,
+        imgY: 1124,
     },
     communication = {
-        imgY: 60,
+        imgY: 1194,
     },
     équipe = {
-        imgY: 60,
+        imgY: 1273,
     },
     collaborations = {
-        imgY: 60,
+        imgY: 1360,
     },
     objectifs = {
-        imgY: 60,
+        imgY: 1424,
     },
     vision = {
-        imgY: 60,
+        imgY: 1499,
     },
     partage = {
-        imgY: 60,
+        imgY: 2508,
     },
     KPI = {
-        imgY: 60,
+        imgY: 1650,
     },
     evolution = {
-        imgY: 60,
+        imgY: 2508,
     }
 ]
