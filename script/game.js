@@ -5,12 +5,11 @@ let cvs         //  canvas
 let ctx         //  context'2d'
 let description //  game description
 let theme1      //  original theme
-let theme2      //  original them v2
 let logo        //  logo witch replace bird
-let bgImage
-let trunk
+let bgImage     //  background image
+let trunk       //  Image for the trunk 
 let trunk2
-let words        //  words
+let words        //  words display on the top
 let bg          //  background
 let bird        //  bird: yellow
 let pipes       //  top and bottom pipes
@@ -28,13 +27,21 @@ const SFX_COLLISION = new Audio()     //  sound for collision
 const SFX_FALL = new Audio()          //  sound for falling to the ground
 const SFX_SWOOSH = new Audio()        //  sound for changing game state
 
+//confetti
+let maxParticleCount = 220; //set max confetti count
+let particleSpeed = 2; //set the particle animation speed
+let startConfetti; //call to start confetti animation
+let stopConfetti; //call to stop adding confetti
+let toggleConfetti; //call to start or stop the confetti animation depending on whether it's already running
+let removeConfetti; //call to stop the confetti animation and remove all confetti immediately
+
+
+//game
 cvs = document.getElementById('game')
 ctx = cvs.getContext('2d')
 description = document.getElementById('description')
 theme1 = new Image()
 theme1.src = 'img/og-theme.png'
-theme2 = new Image()
-theme2.src = 'img/og-theme-2.png'
 bgImage = new Image()
 bgImage.src = 'img/bg.png'
 trunk = new Image()
@@ -52,7 +59,128 @@ SFX_SCORE.src = 'audio/sfx_point.wav'
 SFX_FLAP.src = 'audio/sfx_wing.wav'
 SFX_COLLISION.src = 'audio/sfx_hit.wav'
 SFX_FALL.src = 'audio/sfx_die.wav'
-SFX_SWOOSH.src = 'audio/sfx_swooshing.wav'
+SFX_SWOOSH.src = 'audio/sfx_swooshing.wav';
+
+
+
+
+//confetti
+
+(function() {
+	startConfetti = startConfettiInner;
+	stopConfetti = stopConfettiInner;
+	toggleConfetti = toggleConfettiInner;
+	removeConfetti = removeConfettiInner;
+	let colors = ["DodgerBlue", "OliveDrab", "Gold", "Pink", "SlateBlue", "LightBlue", "Violet", "PaleGreen", "SteelBlue", "SandyBrown", "Chocolate", "Crimson"]
+	let streamingConfetti = false;
+	let animationTimer = null;
+	let particles = [];
+	let waveAngle = 0;
+	
+	function resetParticle(particle, width, height) {
+		particle.color = colors[(Math.random() * colors.length) | 0];
+		particle.x = Math.random() * width;
+		particle.y = Math.random() * height - height;
+		particle.diameter = Math.random() * 10 + 5;
+		particle.tilt = Math.random() * 10 - 10;
+		particle.tiltAngleIncrement = Math.random() * 0.07 + 0.05;
+		particle.tiltAngle = 0;
+		return particle;
+	}
+
+	function startConfettiInner() {
+		let width = window.innerWidth;
+		let height = window.innerHeight;
+		window.requestAnimFrame = (function() {
+			return window.requestAnimationFrame ||
+				window.webkitRequestAnimationFrame ||
+				window.mozRequestAnimationFrame ||
+				window.oRequestAnimationFrame ||
+				window.msRequestAnimationFrame ||
+				function (callback) {
+					return window.setTimeout(callback, 16.6666667);
+				};
+		})();
+		let canvas = document.getElementById("game");
+		let context = canvas.getContext("2d");
+		while (particles.length < maxParticleCount)
+			particles.push(resetParticle({}, width, height));
+		streamingConfetti = true;
+		if (animationTimer === null) {
+			(function runAnimation() {
+				context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+				if (particles.length === 0)
+					animationTimer = null;
+				else {
+					updateParticles();
+					drawParticles(context);
+					animationTimer = requestAnimFrame(runAnimation);
+				}
+			})();
+		}
+	}
+
+	function stopConfettiInner() {
+		streamingConfetti = false;
+	}
+
+	function removeConfettiInner() {
+		stopConfetti();
+		particles = [];
+	}
+
+	function toggleConfettiInner() {
+		if (streamingConfetti)
+			stopConfettiInner();
+		else
+			startConfettiInner();
+	}
+
+	function drawParticles(context) {
+		let particle;
+		let x;
+		for (let i = 0; i < particles.length; i++) {
+			particle = particles[i];
+			context.beginPath();
+			context.lineWidth = particle.diameter;
+			context.strokeStyle = particle.color;
+			x = particle.x + particle.tilt;
+			context.moveTo(x + particle.diameter / 2, particle.y);
+			context.lineTo(x, particle.y + particle.tilt + particle.diameter / 2);
+			context.stroke();
+		}
+	}
+
+	function updateParticles() {
+		let width = window.innerWidth;
+		let height = window.innerHeight;
+		let particle;
+		waveAngle += 0.01;
+		for (let i = 0; i < particles.length; i++) {
+			particle = particles[i];
+			if (!streamingConfetti && particle.y < -15)
+				particle.y = height + 100;
+			else {
+				particle.tiltAngle += particle.tiltAngleIncrement;
+				particle.x += Math.sin(waveAngle);
+				particle.y += (Math.cos(waveAngle) + particle.diameter + particleSpeed) * 0.5;
+				particle.tilt = Math.sin(particle.tiltAngle) * 15;
+			}
+			if (particle.x > width + 20 || particle.x < -20 || particle.y > height) {
+				if (streamingConfetti && particles.length <= maxParticleCount)
+					resetParticle(particle, width, height);
+				else {
+					particles.splice(i, 1);
+					i--;
+				}
+			}
+		}
+	}
+})();
+
+
+
+
 
 gameState = {
     //loads game on ready screen, tick to change state of game
@@ -61,7 +189,8 @@ gameState = {
     //on play game state: bird flaps and flies
     play: 1,
     //game over screen: button||click takes player to ready screen
-    gameOver: 2
+    gameOver: 2,
+    won: 3
 }
 //background
 bg = {
@@ -253,162 +382,206 @@ ground = {
 //current score, top score, tracker
 score = {
     //map of number images
-    
-map : [
-    RASSEMBLER = {
-        imgY: 1,
-    },
-    écoute = {
-        imgY: 70,
-    },
-    accompagner = {
-        imgY: 160,
-    },
-    integration = {
-        imgY: 222,
-    },
-    esprit_critique = {
-        imgY: 295,
-    },
-    médiateur = {
-        imgY: 368,
-    },
-    adaptabilité = {
-        imgY: 444,
-    },
-    transparence = {
-        imgY: 525,
-    },
-    réunir = {
-        imgY: 592,
-    },
-    opportunités = {
-        imgY: 670,
-    },
-    permanences = {
-        imgY: 761,
-    },
+
+    map: [
+        RASSEMBLER = {
+            imgY: 0,
+            imgX: 205
+        },
+        écoute = {
+            imgY: 75,
+            imgX: 205
+        },
+        accompagner = {
+            imgY: 148,
+            imgX: 205
+        },
+        integration = {
+            imgY: 227,
+            imgX: 205
+        },
+        esprit_critique = {
+            imgY: 295,
+            imgX: 205
+        },
+        médiateur = {
+            imgY: 368,
+            imgX: 205
+        },
+        adaptabilité = {
+            imgY: 444,
+            imgX: 205
+        },
+        transparence = {
+            imgY: 520,
+            imgX: 205
+        },
+        réunir = {
+            imgY: 592,
+            imgX: 205
+        },
+        opportunités = {
+            imgY: 670,
+            imgX: 205
+        },
+        permanences = {
+            imgY: 750,
+            imgX: 205
+        },
 
 
 
-    PROFESSIONNALISER = {
-        imgY: 973,
-    },
-    continuité = {
-        imgY: 1045,
-    },
-    formations = {
-        imgY: 1124,
-    },
-    visibilité = {
-        imgY: 1194,
-    },
-    LinkedIn = {
-        imgY: 1273,
-    },
-    sponsors = {
-        imgY: 1360,
-    },
-    autonomie = {
-        imgY: 1424,
-    },
-    financement = {
-        imgY: 1499,
-    },
-    motiver = {
-        imgY: 2508,
-    },
-    Tips = {
-        imgY: 1650,
-    },
-    entrainement = {
-        imgY: 2508,
-    },
+        PROFESSIONNALISER = {
+            imgY: 965,
+            imgX: 205
+        },
+        continuité = {
+            imgY: 1040,
+            imgX: 205
+        },
+        formations = {
+            imgY: 1120,
+            imgX: 205
+        },
+        visibilité = {
+            imgY: 1190,
+            imgX: 205
+        },
+        LinkedIn = {
+            imgY: 1273,
+            imgX: 205
+        },
+        sponsors = {
+            imgY: 1345,
+            imgX: 205
+        },
+        autonomie = {
+            imgY: 1420,
+            imgX: 205
+        },
+        financement = {
+            imgY: 1495,
+            imgX: 205
+        },
+        motiver = {
+            imgY: 1570,
+            imgX: 205
+        },
+        Tips = {
+            imgY: 1645,
+            imgX: 205
+        },
+        entrainement = {
+            imgY: 1718,
+            imgX: 205
+        },
 
 
 
-    RESPONSABILISER = {
-        imgY: 1,
-    },
-    engagement = {
-        imgY: 70,
-    },
-    Sensibiliser = {
-        imgY: 160,
-    },
-    RSE = {
-        imgY: 222,
-    },
-    Responsables = {
-        imgY: 295,
-    },
-    écologiques = {
-        imgY: 368,
-    },
-    humanitaires = {
-        imgY: 444,
-    },
-    templates = {
-        imgY: 525,
-    },
-    sécuriser = {
-        imgY: 592,
-    },
-    neutralit_carbone = {
-        imgY: 670,
-    },
-    ouverture = {
-        imgY: 761,
-    },
+        RESPONSABILISER = {
+            imgY: 0,
+            imgX: 1050
+        },
+        engagement = {
+            imgY: 75,
+            imgX: 1050
+        },
+        Sensibiliser = {
+            imgY: 145,
+            imgX: 1050
+        },
+        RSE = {
+            imgY: 220,
+            imgX: 1050
+        },
+        Responsables = {
+            imgY: 300,
+            imgX: 1050
+        },
+        écologiques = {
+            imgY: 375,
+            imgX: 1050
+        },
+        humanitaires = {
+            imgY: 444,
+            imgX: 1050
+        },
+        templates = {
+            imgY: 525,
+            imgX: 1050
+        },
+        sécuriser = {
+            imgY: 592,
+            imgX: 1050
+        },
+        neutralit_carbone = {
+            imgY: 670,
+            imgX: 1050
+        },
+        ouverture = {
+            imgY: 750,
+            imgX: 1050
+        },
 
 
 
-    ECOSYSTEME = {
-        imgY: 973,
-    },
-    Entraide = {
-        imgY: 1045,
-    },
-    WEF = {
-        imgY: 1124,
-    },
-    communication = {
-        imgY: 1194,
-    },
-    équipe = {
-        imgY: 1273,
-    },
-    collaborations = {
-        imgY: 1360,
-    },
-    objectifs = {
-        imgY: 1424,
-    },
-    vision = {
-        imgY: 1499,
-    },
-    partage = {
-        imgY: 2508,
-    },
-    KPI = {
-        imgY: 1650,
-    },
-    evolution = {
-        imgY: 2508,
-    }
-],
+        ECOSYSTEME = {
+            imgY: 973,
+            imgX: 1050
+        },
+        Entraide = {
+            imgY: 1045,
+            imgX: 1050
+        },
+        WEF = {
+            imgY: 1124,
+            imgX: 1050
+        },
+        communication = {
+            imgY: 1194,
+            imgX: 1050
+        },
+        équipe = {
+            imgY: 1273,
+            imgX: 1050
+        },
+        collaborations = {
+            imgY: 1345,
+            imgX: 1050
+        },
+        objectifs = {
+            imgY: 1420,
+            imgX: 1050
+        },
+        vision = {
+            imgY: 1490,
+            imgX: 1050
+        },
+        partage = {
+            imgY: 1570,
+            imgX: 1050
+        },
+        KPI = {
+            imgY: 1645,
+            imgX: 1050
+        },
+        evolution = {
+            imgY: 1710,
+            imgX: 1050
+        }
+    ],
     current: 0,
     best: null, // DO THIS STRETCH GOAL
     //values for drawing mapped numbers on canvas
-    x: cvs.width/2,
+    x: cvs.width / 2,
     y: 20,
-    w: 315,
-    h: 25,
+    w: 290,
+    h: 30,
 
-    imgX: 215,
+    imgX: 205,
     // imgY: 0,
     width: 636,
-    height: 60,
+    height: 70,
 
     reset: function () {
         this.current = 0
@@ -422,15 +595,11 @@ map : [
             let ones = string.charAt(string.length - 1)
 
             //if current score has thousands place value: the game is over
-            if (this.current >= 45) {
-                gameState.current = gameState.gameOver
+            if (this.current > 43) {
+                gameState.current = gameState.won
 
-            } else {
-                if (this.current < 45) { imgX: 215 }
-                ctx.drawImage(words, this.imgX, this.map[this.current].imgY, this.width, this.height, (this.x - this.w / 2), this.y, this.w, this.h)
-            }
+            } else { ctx.drawImage(words, this.map[this.current].imgX, this.map[this.current].imgY, this.width, this.height, (this.x - this.w / 2), this.y, this.w, this.h) }
         }
-
     }
 }
 //bird : YELLOW BIRD
@@ -512,7 +681,7 @@ bird = {
 
             //bird cannot fly above canvas
             if (this.y - this.h / 2 <= 0) {
-                this.y = this.r
+                gameState.current = gameState.gameOver
             }
 
         }
@@ -560,6 +729,26 @@ gameOver = {
         }
     }
 }
+
+win = {
+    imgX: 0,
+    imgY: 110,
+    width: 275,
+    height: 110,
+    //values for drawing on canvas
+    x: cvs.width / 2 - 226 / 2,
+    y: cvs.height / 2 - 100,
+    w: 250,
+    h: 100,
+    render: function () {
+        
+        if (gameState.current == gameState.won) {
+            startConfetti();
+            ctx.drawImage(theme1, this.imgX, this.imgY, this.width, this.height, this.x, this.y, this.w, this.h)
+            description.style.visibility = "visible"
+        }
+    }
+}
 /************************
 ***** FUNCTIONS: ********
 ************************/
@@ -576,6 +765,7 @@ let draw = () => {
     bird.render()
     getReady.render()
     gameOver.render()
+    win.render()
 }
 //updates on animation and position goes in here
 let update = () => {
@@ -613,6 +803,7 @@ cvs.addEventListener('click', () => {
     }
     //if game over screen >> go to ready screen
     if (gameState.current == gameState.gameOver) {
+
         pipes.reset()
         score.reset()
         gameState.current = gameState.getReady
@@ -634,6 +825,7 @@ document.body.addEventListener('keydown', (e) => {
         }
         //if game over screen >> go to ready screen
         if (gameState.current == gameState.gameOver) {
+
             pipes.reset()
             score.reset()
             SFX_SWOOSH.play()
