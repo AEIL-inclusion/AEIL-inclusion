@@ -8,6 +8,8 @@ let theme1      //  original theme
 let theme2      //  original them v2
 let logo        //  logo witch replace bird
 let bgImage
+let trunk
+let trunk2
 let words        //  words
 let bg          //  background
 let bird        //  bird: yellow
@@ -35,6 +37,10 @@ theme2 = new Image()
 theme2.src = 'img/og-theme-2.png'
 bgImage = new Image()
 bgImage.src = 'img/bg.png'
+trunk = new Image()
+trunk.src = 'img/trunk.png'
+trunk2 = new Image()
+trunk2.src = 'img/trunkdown.png'
 frame = 0;
 logo = new Image()
 logo.src = 'img/LOGO.png'
@@ -99,16 +105,16 @@ pipes = {
     //object's key-value properties pinpointing its location
     //top pipe image x,y coordinate
     top: {
-        imgX: 56,
-        imgY: 323,
+        imgX: 191,
+        imgY: 254,
     },
     //bot pipe image x,y coordinate
     bot: {
-        imgX: 84,
-        imgY: 323,
+        imgX: 260,
+        imgY: 100,
     },
-    width: 26,
-    height: 160,
+    width: 409,
+    height: 1536,
     //pipes' values for drawing on canvas
     w: 55,
     h: 300,
@@ -131,8 +137,8 @@ pipes = {
             let topPipe = pipe.y
             let bottomPipe = pipe.y + this.gap + this.h
 
-            ctx.drawImage(theme2, this.top.imgX, this.top.imgY, this.width, this.height, pipe.x, topPipe, this.w, this.h)
-            ctx.drawImage(theme2, this.bot.imgX, this.bot.imgY, this.width, this.height, pipe.x, bottomPipe, this.w, this.h)
+            ctx.drawImage(trunk2, this.top.imgX, this.top.imgY, this.width, this.height, pipe.x, topPipe, this.w, this.h)
+            ctx.drawImage(trunk, this.bot.imgX, this.bot.imgY, this.width, this.height, pipe.x, bottomPipe, this.w, this.h)
         }
     },
     position: function () {
