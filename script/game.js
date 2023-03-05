@@ -105,7 +105,7 @@ pipes = {
     //object's key-value properties pinpointing its location
     //top pipe image x,y coordinate
     top: {
-        imgX: 191,
+        imgX: 201,
         imgY: 254,
     },
     //bot pipe image x,y coordinate
