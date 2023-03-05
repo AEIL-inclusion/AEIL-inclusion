@@ -9,6 +9,7 @@ let logo        //  logo witch replace bird
 let bgImage     //  background image
 let trunk       //  Image for the trunk 
 let trunk2
+let medails
 let words        //  words display on the top
 let bg          //  background
 let bird        //  bird: yellow
@@ -42,6 +43,8 @@ ctx = cvs.getContext('2d')
 description = document.getElementById('description')
 theme1 = new Image()
 theme1.src = 'img/og-theme.png'
+medails = new Image()
+medails.src = 'img/medailles.png'
 bgImage = new Image()
 bgImage.src = 'img/bg.png'
 trunk = new Image()
@@ -66,116 +69,116 @@ SFX_SWOOSH.src = 'audio/sfx_swooshing.wav';
 
 //confetti
 
-(function() {
-	startConfetti = startConfettiInner;
-	stopConfetti = stopConfettiInner;
-	toggleConfetti = toggleConfettiInner;
-	removeConfetti = removeConfettiInner;
-	let colors = ["DodgerBlue", "OliveDrab", "Gold", "Pink", "SlateBlue", "LightBlue", "Violet", "PaleGreen", "SteelBlue", "SandyBrown", "Chocolate", "Crimson"]
-	let streamingConfetti = false;
-	let animationTimer = null;
-	let particles = [];
-	let waveAngle = 0;
-	
-	function resetParticle(particle, width, height) {
-		particle.color = colors[(Math.random() * colors.length) | 0];
-		particle.x = Math.random() * width;
-		particle.y = Math.random() * height - height;
-		particle.diameter = Math.random() * 10 + 5;
-		particle.tilt = Math.random() * 10 - 10;
-		particle.tiltAngleIncrement = Math.random() * 0.07 + 0.05;
-		particle.tiltAngle = 0;
-		return particle;
-	}
+(function () {
+    startConfetti = startConfettiInner;
+    stopConfetti = stopConfettiInner;
+    toggleConfetti = toggleConfettiInner;
+    removeConfetti = removeConfettiInner;
+    let colors = ["DodgerBlue", "OliveDrab", "Gold", "Pink", "SlateBlue", "LightBlue", "Violet", "PaleGreen", "SteelBlue", "SandyBrown", "Chocolate", "Crimson"]
+    let streamingConfetti = false;
+    let animationTimer = null;
+    let particles = [];
+    let waveAngle = 0;
 
-	function startConfettiInner() {
-		let width = window.innerWidth;
-		let height = window.innerHeight;
-		window.requestAnimFrame = (function() {
-			return window.requestAnimationFrame ||
-				window.webkitRequestAnimationFrame ||
-				window.mozRequestAnimationFrame ||
-				window.oRequestAnimationFrame ||
-				window.msRequestAnimationFrame ||
-				function (callback) {
-					return window.setTimeout(callback, 16.6666667);
-				};
-		})();
-		let canvas = document.getElementById("game");
-		let context = canvas.getContext("2d");
-		while (particles.length < maxParticleCount)
-			particles.push(resetParticle({}, width, height));
-		streamingConfetti = true;
-		if (animationTimer === null) {
-			(function runAnimation() {
-				context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-				if (particles.length === 0)
-					animationTimer = null;
-				else {
-					updateParticles();
-					drawParticles(context);
-					animationTimer = requestAnimFrame(runAnimation);
-				}
-			})();
-		}
-	}
+    function resetParticle(particle, width, height) {
+        particle.color = colors[(Math.random() * colors.length) | 0];
+        particle.x = Math.random() * width;
+        particle.y = Math.random() * height - height;
+        particle.diameter = Math.random() * 10 + 5;
+        particle.tilt = Math.random() * 10 - 10;
+        particle.tiltAngleIncrement = Math.random() * 0.07 + 0.05;
+        particle.tiltAngle = 0;
+        return particle;
+    }
 
-	function stopConfettiInner() {
-		streamingConfetti = false;
-	}
+    function startConfettiInner() {
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        window.requestAnimFrame = (function () {
+            return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                function (callback) {
+                    return window.setTimeout(callback, 16.6666667);
+                };
+        })();
+        let canvas = document.getElementById("game");
+        let context = canvas.getContext("2d");
+        while (particles.length < maxParticleCount)
+            particles.push(resetParticle({}, width, height));
+        streamingConfetti = true;
+        if (animationTimer === null) {
+            (function runAnimation() {
+                context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+                if (particles.length === 0)
+                    animationTimer = null;
+                else {
+                    updateParticles();
+                    drawParticles(context);
+                    animationTimer = requestAnimFrame(runAnimation);
+                }
+            })();
+        }
+    }
 
-	function removeConfettiInner() {
-		stopConfetti();
-		particles = [];
-	}
+    function stopConfettiInner() {
+        streamingConfetti = false;
+    }
 
-	function toggleConfettiInner() {
-		if (streamingConfetti)
-			stopConfettiInner();
-		else
-			startConfettiInner();
-	}
+    function removeConfettiInner() {
+        stopConfetti();
+        particles = [];
+    }
 
-	function drawParticles(context) {
-		let particle;
-		let x;
-		for (let i = 0; i < particles.length; i++) {
-			particle = particles[i];
-			context.beginPath();
-			context.lineWidth = particle.diameter;
-			context.strokeStyle = particle.color;
-			x = particle.x + particle.tilt;
-			context.moveTo(x + particle.diameter / 2, particle.y);
-			context.lineTo(x, particle.y + particle.tilt + particle.diameter / 2);
-			context.stroke();
-		}
-	}
+    function toggleConfettiInner() {
+        if (streamingConfetti)
+            stopConfettiInner();
+        else
+            startConfettiInner();
+    }
 
-	function updateParticles() {
-		let width = window.innerWidth;
-		let height = window.innerHeight;
-		let particle;
-		waveAngle += 0.01;
-		for (let i = 0; i < particles.length; i++) {
-			particle = particles[i];
-			if (!streamingConfetti && particle.y < -15)
-				particle.y = height + 100;
-			else {
-				particle.tiltAngle += particle.tiltAngleIncrement;
-				particle.x += Math.sin(waveAngle);
-				particle.y += (Math.cos(waveAngle) + particle.diameter + particleSpeed) * 0.5;
-				particle.tilt = Math.sin(particle.tiltAngle) * 15;
-			}
-			if (particle.x > width + 20 || particle.x < -20 || particle.y > height) {
-				if (streamingConfetti && particles.length <= maxParticleCount)
-					resetParticle(particle, width, height);
-				else {
-					particles.splice(i, 1);
-					i--;
-				}
-			}
-		}
-	}
+    function drawParticles(context) {
+        let particle;
+        let x;
+        for (let i = 0; i < particles.length; i++) {
+            particle = particles[i];
+            context.beginPath();
+            context.lineWidth = particle.diameter;
+            context.strokeStyle = particle.color;
+            x = particle.x + particle.tilt;
+            context.moveTo(x + particle.diameter / 2, particle.y);
+            context.lineTo(x, particle.y + particle.tilt + particle.diameter / 2);
+            context.stroke();
+        }
+    }
+
+    function updateParticles() {
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        let particle;
+        waveAngle += 0.01;
+        for (let i = 0; i < particles.length; i++) {
+            particle = particles[i];
+            if (!streamingConfetti && particle.y < -15)
+                particle.y = height + 100;
+            else {
+                particle.tiltAngle += particle.tiltAngleIncrement;
+                particle.x += Math.sin(waveAngle);
+                particle.y += (Math.cos(waveAngle) + particle.diameter + particleSpeed) * 0.5;
+                particle.tilt = Math.sin(particle.tiltAngle) * 15;
+            }
+            if (particle.x > width + 20 || particle.x < -20 || particle.y > height) {
+                if (streamingConfetti && particles.length <= maxParticleCount)
+                    resetParticle(particle, width, height);
+                else {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+    }
 })();
 
 
@@ -570,7 +573,7 @@ score = {
             imgX: 1050
         }
     ],
-    current: 0,
+    current: 42,
     best: null, // DO THIS STRETCH GOAL
     //values for drawing mapped numbers on canvas
     x: cvs.width / 2,
@@ -720,12 +723,31 @@ gameOver = {
     y: cvs.height / 2 - 160,
     w: 226,
     h: 160,
+
+    xmedails: (cvs.width / 2) - 50,
     //object's render function that utilizes all above values to draw image onto canvas
     render: function () {
         //only draw this if the game state is on game over
         if (gameState.current == gameState.gameOver) {
             ctx.drawImage(theme1, this.imgX, this.imgY, this.width, this.height, this.x, this.y, this.w, this.h)
             description.style.visibility = "visible"
+            console.log(score.current)
+            if (score.current <= 11) {
+                ctx.drawImage(medails, 0, 0, 2034, 2034, this.xmedails, this.xmedails + 50, 100, 100)
+                return;
+            }
+            if (score.current > 40) {
+                ctx.drawImage(medails, 2069, 2069, 2034, 2034, this.xmedails, this.xmedails + 50, 100, 100)
+                return;
+            }
+            if (score.current > 25) {
+                ctx.drawImage(medails, 0, 2069, 2034, 2034, this.xmedails, this.xmedails + 50, 100, 100)
+                return;
+            }
+            if (score.current > 11) {
+                ctx.drawImage(medails, 2069, 0, 2034, 2034, this.xmedails, this.xmedails + 50, 100, 100)
+                return;
+            }
         }
     }
 }
@@ -741,7 +763,7 @@ win = {
     w: 250,
     h: 100,
     render: function () {
-        
+
         if (gameState.current == gameState.won) {
             startConfetti();
             ctx.drawImage(theme1, this.imgX, this.imgY, this.width, this.height, this.x, this.y, this.w, this.h)
