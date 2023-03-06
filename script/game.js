@@ -28,7 +28,7 @@ const SFX_COLLISION = new Audio()     //  sound for collision
 const SFX_FALL = new Audio()          //  sound for falling to the ground
 const SFX_SWOOSH = new Audio()        //  sound for changing game state
 
-let printScoring=document.getElementById('printScoring')
+let printScoring = document.getElementById('printScoring')
 //confetti
 let maxParticleCount = 220; //set max confetti count
 let particleSpeed = 2; //set the particle animation speed
@@ -65,8 +65,8 @@ SFX_COLLISION.src = 'audio/sfx_hit.wav'
 SFX_FALL.src = 'audio/sfx_die.wav'
 SFX_SWOOSH.src = 'audio/sfx_swooshing.wav';
 
-let speed = 1.4;
-let winNumber=43;
+let speed = 1.5;
+let winNumber = 43;
 
 
 //confetti
@@ -230,7 +230,7 @@ bg = {
         }
         //ANIMATION: slowly move background on play game state by decrementing x
         if (gameState.current == gameState.play) {
-            this.x = (this.x - this.dx) % (this.w)
+            this.x = ((this.x - this.dx) % (this.w))
         }
     }
 }
@@ -253,7 +253,7 @@ pipes = {
     w: 55,
     h: 300,
     gap: 85,
-    dx: 2*speed,
+    dx: 2 * speed,
     //acceptable y values must be -260 <= y <= -40
     minY: -260,
     maxY: -40,
@@ -364,7 +364,7 @@ ground = {
     y: cvs.height - 112,
     w: 224,
     h: 112,
-    dx: 2*speed,
+    dx: 2 * speed,
     render: function () {
         ctx.drawImage(theme1, this.imgX, this.imgY, this.width, this.height, this.x, this.y, this.w, this.h)
         //image repeat and tile to fit canvas
@@ -598,7 +598,7 @@ score = {
             //if current score has thousands place value: the game is over
             if (this.current > winNumber) {
                 gameState.current = gameState.won
-            } else { ctx.drawImage(words, this.map[this.current%43].imgX, this.map[this.current%43].imgY, this.width, this.height, (this.x - this.w / 2), this.y, this.w, this.h) }
+            } else { ctx.drawImage(words, this.map[this.current % 43].imgX, this.map[this.current % 43].imgY, this.width, this.height, (this.x - this.w / 2), this.y, this.w, this.h) }
         }
     }
 }
@@ -775,8 +775,8 @@ let draw = () => {
     ctx.fillStyle = '#606BA0'
     ctx.fillRect(0, 0, cvs.width, cvs.height)
     //Scoring
-    printScoring.innerHTML="Score : "+score.current+"/43"
-    printScoring.style.zIndex = 2000; 
+    printScoring.innerHTML = "Score : " + score.current + "/43"
+    printScoring.style.zIndex = 2000;
     //things to draw
     bg.render()
     pipes.render()
@@ -790,7 +790,7 @@ let draw = () => {
 //updates on animation and position goes in here
 let update = () => {
     //things to update
-    switch (score.current){
+    switch (score.current) {
         case 10:
             speed = 1.5
             break;
@@ -800,20 +800,23 @@ let update = () => {
         case 30:
             speed = 3
             break;
-        case 40:
-            speed = 4
+        case 45:
+            speed = 3
             break;
         case 50:
-            speed = 5
+            speed = 4
             break;
         case 60:
-            speed = 6
+            speed = 5
             break;
         case 70:
             speed = 7
             break;
         case 80:
             speed = 8
+            break;
+        case 90:
+            speed = 9
             break;
     }
 
@@ -858,12 +861,12 @@ cvs.addEventListener('click', () => {
     }
     if (gameState.current == gameState.won) {
         stopConfetti()
-        winNumber=999;
+        winNumber = 999;
         gameState.current = gameState.getReady
         SFX_SWOOSH.play()
         pipes.reset()
         score.reset()
-        score.current=43
+        score.current = 44
     }
 })
 //on spacebar
@@ -886,16 +889,16 @@ document.body.addEventListener('keydown', (e) => {
             score.reset()
             SFX_SWOOSH.play()
             gameState.current = gameState.getReady
-            
+
         }
         if (gameState.current == gameState.won) {
             stopConfetti()
-            winNumber=999;
+            winNumber = 999;
             SFX_SWOOSH.play()
             gameState.current = gameState.getReady
             pipes.reset()
             score.reset()
-            score.current=43
+            score.current = 44
         }
     }
 })
