@@ -28,6 +28,7 @@ const SFX_COLLISION = new Audio()     //  sound for collision
 const SFX_FALL = new Audio()          //  sound for falling to the ground
 const SFX_SWOOSH = new Audio()        //  sound for changing game state
 
+let printScoring=document.getElementById('printScoring')
 //confetti
 let maxParticleCount = 220; //set max confetti count
 let particleSpeed = 2; //set the particle animation speed
@@ -779,6 +780,9 @@ let draw = () => {
     //this clears canvas to default bg color
     ctx.fillStyle = '#606BA0'
     ctx.fillRect(0, 0, cvs.width, cvs.height)
+    //Scoring
+    printScoring.innerHTML="Score : "+score.current+"/43"
+    printScoring.style.zIndex = 2000; 
     //things to draw
     bg.render()
     pipes.render()

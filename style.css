@@ -69,3 +69,12 @@ canvas {
     line-height: 2em;
     text-align: center;
 }
+
+#printScoring{
+    text-shadow: 1px 0px rgba(250, 250, 250, 0.8);
+    margin-bottom: 2px;
+    margin-left: 10px;
+    left: center;
+    font-family: 'optima', cursive;
+    color: #EAA501;
+}
