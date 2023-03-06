@@ -65,7 +65,8 @@ SFX_COLLISION.src = 'audio/sfx_hit.wav'
 SFX_FALL.src = 'audio/sfx_die.wav'
 SFX_SWOOSH.src = 'audio/sfx_swooshing.wav';
 
-
+let speed = 1.4;
+let winNumber=43;
 
 
 //confetti
@@ -210,7 +211,7 @@ bg = {
     y: 0,
     w: 707,
     h: 414,
-    dx: .8,
+    dx: .8*speed,
     //object's render function that utilizes all above values to draw image onto canvas
     render: function () {
         ctx.drawImage(bgImage, this.imgX, this.imgY, this.width, this.height, this.x, this.y, this.w, this.h)
@@ -252,7 +253,7 @@ pipes = {
     w: 55,
     h: 300,
     gap: 85,
-    dx: 2,
+    dx: 2*speed,
     //acceptable y values must be -260 <= y <= -40
     minY: -260,
     maxY: -40,
@@ -363,7 +364,7 @@ ground = {
     y: cvs.height - 112,
     w: 224,
     h: 112,
-    dx: 2,
+    dx: 2*speed,
     render: function () {
         ctx.drawImage(theme1, this.imgX, this.imgY, this.width, this.height, this.x, this.y, this.w, this.h)
         //image repeat and tile to fit canvas
@@ -594,15 +595,10 @@ score = {
     render: function () {
         if (gameState.current == gameState.play ||
             gameState.current == gameState.gameOver) {
-            //change current score number value to string value and access each place value
-            let string = this.current.toString()
-            let ones = string.charAt(string.length - 1)
-
             //if current score has thousands place value: the game is over
-            if (this.current > 43) {
+            if (this.current > winNumber) {
                 gameState.current = gameState.won
-
-            } else { ctx.drawImage(words, this.map[this.current].imgX, this.map[this.current].imgY, this.width, this.height, (this.x - this.w / 2), this.y, this.w, this.h) }
+            } else { ctx.drawImage(words, this.map[this.current%43].imgX, this.map[this.current%43].imgY, this.width, this.height, (this.x - this.w / 2), this.y, this.w, this.h) }
         }
     }
 }
@@ -764,11 +760,9 @@ win = {
     w: 250,
     h: 100,
     render: function () {
-
         if (gameState.current == gameState.won) {
-            startConfetti();
-            ctx.drawImage(theme1, this.imgX, this.imgY, this.width, this.height, this.x, this.y, this.w, this.h)
             description.style.visibility = "visible"
+            startConfetti();
         }
     }
 }
@@ -796,6 +790,33 @@ let draw = () => {
 //updates on animation and position goes in here
 let update = () => {
     //things to update
+    switch (score.current){
+        case 10:
+            speed = 1.5
+            break;
+        case 20:
+            speed = 2
+            break;
+        case 30:
+            speed = 3
+            break;
+        case 40:
+            speed = 4
+            break;
+        case 50:
+            speed = 5
+            break;
+        case 60:
+            speed = 6
+            break;
+        case 70:
+            speed = 7
+            break;
+        case 80:
+            speed = 8
+            break;
+    }
+
     bird.position()
     bg.position()
     pipes.position()
@@ -835,6 +856,15 @@ cvs.addEventListener('click', () => {
         gameState.current = gameState.getReady
         SFX_SWOOSH.play()
     }
+    if (gameState.current == gameState.won) {
+        stopConfetti()
+        winNumber=999;
+        gameState.current = gameState.getReady
+        SFX_SWOOSH.play()
+        pipes.reset()
+        score.reset()
+        score.current=43
+    }
 })
 //on spacebar
 document.body.addEventListener('keydown', (e) => {
@@ -856,6 +886,16 @@ document.body.addEventListener('keydown', (e) => {
             score.reset()
             SFX_SWOOSH.play()
             gameState.current = gameState.getReady
+            
+        }
+        if (gameState.current == gameState.won) {
+            stopConfetti()
+            winNumber=999;
+            SFX_SWOOSH.play()
+            gameState.current = gameState.getReady
+            pipes.reset()
+            score.reset()
+            score.current=43
         }
     }
 })

@@ -44,6 +44,7 @@ body {
 }
 
 .game-screen {
+    background-color: transparent;
     /* background-color: rgb(69, 184, 194); */
     background-image: url('./img/end.png');
     background-repeat: no-repeat;
