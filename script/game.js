@@ -573,7 +573,7 @@ score = {
             imgX: 1050
         }
     ],
-    current: 42,
+    current: 0,
     best: null, // DO THIS STRETCH GOAL
     //values for drawing mapped numbers on canvas
     x: cvs.width / 2,
